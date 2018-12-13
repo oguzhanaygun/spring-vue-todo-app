@@ -1,7 +1,7 @@
 **To run Spring boot app**
  
  - Be sure maven has installed 
- - Go to the src/main/resources and give proper values to bellow properties
+ - Go to the src/main/resources and give proper values to bellow properties on application.properties
 	- spring.datasource.url
 	 - spring.datasource.username
 	 - spring.datasource.password
