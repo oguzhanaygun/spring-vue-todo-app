@@ -31,7 +31,7 @@
         },
         methods : {
             handleSubmit(e){
-                e.preventDefault()
+                e.preventDefault();
                 if (this.password.length > 0) {
                     this.$http.post('http://localhost:5000/api/auth/signin', {
                         usernameOrEmail: this.usernameOrEmail,
@@ -47,8 +47,10 @@
                             this.$emit('loggedIn')
                             if(this.$route.params.nextUrl != null){
                                 this.$router.push(this.$route.params.nextUrl)
+                                location.reload();
                             } else {
                                 this.$router.push('dashboard')
+                                location.reload();
                             }
                         }
                     })

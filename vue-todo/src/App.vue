@@ -1,17 +1,24 @@
+
 <template>
   <div id="app">
-    <router-view/>
+    <header-view></header-view>
+  <div class="test"><router-view/></div>
+    
   </div>
 </template>
 
 <script>
+  import header from '@/components/Header'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+          'header-view': header
+      }
 }
 </script>
 
 <style>
-#app {
+.test {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

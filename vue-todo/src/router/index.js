@@ -5,6 +5,7 @@ import Login from '@/components/Login'
 import Register from '@/components/Register'
 import UserBoard from '@/components/UserBoard'
 import Admin from '@/components/Admin'
+import Header from '@/components/Header'
 
 Vue.use(Router)
 
@@ -13,72 +14,78 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'Home',
+      component: HelloWorld,
+      meta: {
+        requiresAuth: false,
+        isAdmin: false,
+        show : true
+      }
     },
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: Login,
       meta: {
-        guest: true
+        requiresAuth: false,
+        isAdmin: false,
+        show : false
       }
     },
     {
       path: '/register',
-      name: 'register',
+      name: 'Register',
       component: Register,
       meta: {
-        guest: true
+        requiresAuth: false,
+        isAdmin: false,
+        show : false
       }
     },
     {
       path: '/dashboard',
-      name: 'userboard',
+      name: 'DashBoard',
       component: UserBoard,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        isAdmin: false,
+        show : true
       }
     },
     {
       path: '/admin',
-      name: 'admin',
+      name: 'Admin',
       component: Admin,
       meta: {
         requiresAuth: true,
-        is_admin: true
+        isAdmin: true,
+        show : false
       }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem('jwt') == null) {
-      next({
-        path: '/login',
-        params: { nextUrl: to.fullPath }
-      })
-    } else {
-      let user = JSON.parse(localStorage.getItem('user'))
-      if (to.matched.some(record => record.meta.is_admin)) {
-        if (user.is_admin == 1) {
-          next()
-        } else {
-          next({ name: 'userboard'})
-        }
+  let jwt = localStorage.getItem('jwt');
+  let isAdmin = JSON.parse(localStorage.getItem('isAdmin'))
+ 
+  if(to.matched.some(record => record.meta.isAdmin)) {
+      if (isAdmin) {
+          next();
       } else {
-        next()
+          alert("you are not authorized");
       }
-    }
-  } else if (to.matched.some(record => record.meta.guest)) {
-    if (localStorage.getItem('jwt') == null || localStorage.getItem('jwt') == "") {
-      next()
-    } else {
-      next({ name: 'userboard'})
-    }
+  } else if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (jwt == null) {
+          next({
+            path: '/login',
+            params: { nextUrl: to.fullPath }
+          });
+      } else {
+           next();
+      }
   } else {
-    next()
+      next()
   }
 })
 
