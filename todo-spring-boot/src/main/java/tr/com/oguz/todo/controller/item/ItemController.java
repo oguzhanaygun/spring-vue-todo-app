@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tr.com.oguz.todo.controller.BaseController;
-import tr.com.oguz.todo.exception.BadRequestException;
+import tr.com.oguz.todo.payload.ItemRequest;
 import tr.com.oguz.todo.persistence.entity.todo.Item;
+import tr.com.oguz.todo.security.CurrentUser;
+import tr.com.oguz.todo.security.UserPrincipal;
 import tr.com.oguz.todo.service.item.ItemService;
 
 @RestController
@@ -20,31 +22,30 @@ import tr.com.oguz.todo.service.item.ItemService;
 public class ItemController extends BaseController<ItemService> {
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getOne(@PathVariable("id") long id) {
+	public ResponseEntity<?> getOne(@CurrentUser UserPrincipal currentUser, @PathVariable("id") long id) {
 		return ResponseEntity.ok(service.get(id));
 	}
 
 	@PostMapping("/{id}/done")
-	public ResponseEntity<?> doneTodo(@PathVariable("id") long id) {
+	public ResponseEntity<?> doneTodo(@CurrentUser UserPrincipal currentUser, @PathVariable("id") long id) {
 		return ResponseEntity.ok(service.doneItem(id));
+	}
+
+	@PostMapping("/{id}/start")
+	public ResponseEntity<?> startTodo(@CurrentUser UserPrincipal currentUser, @PathVariable("id") long id) {
+		return ResponseEntity.ok(service.startItem(id));
 	}
 
 	@PostMapping()
 	public ResponseEntity<?> create(@Valid @RequestBody Item item) {
 		item = service.save(item);
-		if (item == null) {
-			throw new BadRequestException("ups! something went wrong.");
-		}
 		return ResponseEntity.ok(item);
 	}
 
 	@PostMapping("/{listId}")
-	public ResponseEntity<?> create(@PathVariable("listId") long listId, @Valid @RequestBody Item item) {
-		item = service.saveToList(listId, item);
-		if (item == null) {
-			throw new BadRequestException("ups! something went wrong.");
-		}
-		return ResponseEntity.ok(item);
+	public ResponseEntity<?> create(@CurrentUser UserPrincipal currentUser, @PathVariable("listId") long listId,
+			@Valid @RequestBody ItemRequest itemRequest) {
+		return ResponseEntity.ok(service.saveToList(listId, itemRequest));
 	}
 
 }

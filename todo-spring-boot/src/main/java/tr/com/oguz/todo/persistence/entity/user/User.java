@@ -30,7 +30,7 @@ import tr.com.oguz.todo.persistence.entity.todo.ItemList;
 
 @Entity
 @Table(name = "USERS", uniqueConstraints = { @UniqueConstraint(columnNames = { "username", "email" }) })
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.None.class, property = "id")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -110,6 +110,7 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	@JsonIgnore
 	public String getPassword() {
 		return password;

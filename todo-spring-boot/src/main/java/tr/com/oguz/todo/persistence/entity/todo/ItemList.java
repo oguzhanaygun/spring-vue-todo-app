@@ -16,9 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -30,7 +27,7 @@ import tr.com.oguz.todo.persistence.entity.user.User;
 
 @Entity
 @Table(name = "TODO_LIST")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.None.class, property = "id")
 public class ItemList implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -41,19 +38,15 @@ public class ItemList implements Serializable {
 	private Long id;
 
 	@Column(nullable = false)
-	@NotNull
-	@Size(min = 2, message = "Name should have atleast 2 characters")
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "list", orphanRemoval = true, fetch = FetchType.EAGER)
 	@OrderBy("id ASC")
-	@Valid
 	@JsonManagedReference
 	private Set<Item> items;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "createdBy", nullable = false, updatable = false, insertable = true)
-	@Valid
 	@JsonBackReference
 	private User createdBy;
 

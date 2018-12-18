@@ -12,17 +12,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import tr.com.oguz.todo.payload.ApiResponse;
 import tr.com.oguz.todo.payload.FieldError;
 
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@ExceptionHandler(HasUnfinishedDependenciesException.class)
-	public final ResponseEntity<Object> handleUserNotFoundException(HasUnfinishedDependenciesException ex,
-			WebRequest request) {
+	public final ResponseEntity<Object> handleUserNotFoundException(AppException ex, WebRequest request) {
 
-		return new ResponseEntity(ex, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity(ex.getResponse(), HttpStatus.BAD_REQUEST);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -32,6 +34,10 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 				.map(f -> new FieldError(f.getField(), f.getDefaultMessage(), f.getRejectedValue()))
 				.collect(Collectors.toList());
 
-		return new ResponseEntity(fieldErrors, HttpStatus.BAD_REQUEST);
+		ApiResponse<List<FieldError>> apiResponse = new ApiResponse<List<FieldError>>(false, "validation error",
+				fieldErrors);
+
+		return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
 	}
+
 }

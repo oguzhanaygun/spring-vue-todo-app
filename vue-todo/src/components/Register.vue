@@ -100,17 +100,17 @@
                             this.$emit('loggedIn')
                             if(this.$route.params.nextUrl != null){
                                 this.$router.push(this.$route.params.nextUrl)
-                                location.reload();
+                                 this.$router.go();
                             } else {
                                 this.$router.push('dashboard')
-                                location.reload();
+                                 this.$router.go();
                             }
                         }
                     })
                     .catch(error => {
                         for(let i in error.response.data){
-                            let fieldName = error.response.data[i].fieldName;
-                            let message = error.response.data[i].message;
+                            let fieldName = error.response.data.data[i].fieldName;
+                            let message = error.response.data.data[i].message;
                             switch (fieldName){
                                 case 'name':
                                     this.name_not_valid = message;

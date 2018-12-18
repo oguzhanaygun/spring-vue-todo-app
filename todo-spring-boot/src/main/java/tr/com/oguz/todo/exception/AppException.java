@@ -1,12 +1,17 @@
 package tr.com.oguz.todo.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import tr.com.oguz.todo.payload.ApiResponse;
 
-@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class AppException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
+
+	private ApiResponse response;
+
+	public AppException(ApiResponse response) {
+		super(response.getMessage());
+		this.response = response;
+	}
 
 	public AppException(String message) {
 		super(message);
@@ -15,4 +20,13 @@ public class AppException extends RuntimeException {
 	public AppException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
+	public ApiResponse getResponse() {
+		return response;
+	}
+
+	public void setResponse(ApiResponse response) {
+		this.response = response;
+	}
+
 }

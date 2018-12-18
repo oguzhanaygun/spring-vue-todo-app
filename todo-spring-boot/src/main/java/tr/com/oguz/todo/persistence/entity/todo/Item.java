@@ -30,7 +30,7 @@ import tr.com.oguz.todo.persistence.common.DateAudit;
 
 @Table(name = "TODO_ITEM")
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.None.class, property = "id")
 public class Item implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -46,30 +46,25 @@ public class Item implements Serializable {
 	private String name;
 
 	@Column()
-	private String descripition;
+	private String description;
 
 	@Column()
-	private Date deadLine;
+	private Date deadline;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "status_id", nullable = false, updatable = true, insertable = true)
+	@JsonManagedReference
 	private Status status;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "list_id", nullable = false, insertable = true, updatable = false)
-	@Valid
 	@JsonBackReference
 	private ItemList list;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "ITEM_DEPENDENCY_MAP", joinColumns = @JoinColumn(name = "todo_id"), inverseJoinColumns = @JoinColumn(name = "dependent_id"))
-	@JsonManagedReference
+	@JsonManagedReference 
 	private List<Item> dependentItems;
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ITEM_DEPENDENCY_MAP", joinColumns = @JoinColumn(name = "dependent_id"), inverseJoinColumns = @JoinColumn(name = "todo_id"))
-	@JsonManagedReference
-	private List<Item> dependentByItems;
 
 	@Embedded
 	DateAudit dateAudit;
@@ -94,20 +89,20 @@ public class Item implements Serializable {
 		this.name = name;
 	}
 
-	public String getDescripition() {
-		return descripition;
+	public String getdescription() {
+		return description;
 	}
 
-	public void setDescripition(String descripition) {
-		this.descripition = descripition;
+	public void setdescription(String description) {
+		this.description = description;
 	}
 
-	public Date getDeadLine() {
-		return deadLine;
+	public Date getDeadline() {
+		return deadline;
 	}
 
-	public void setDeadLine(Date deadLine) {
-		this.deadLine = deadLine;
+	public void setDeadline(Date deadline) {
+		this.deadline = deadline;
 	}
 
 	public Status getStatus() {
@@ -124,14 +119,6 @@ public class Item implements Serializable {
 
 	public void setDependentItems(List<Item> dependentItems) {
 		this.dependentItems = dependentItems;
-	}
-
-	public List<Item> getDependentByItems() {
-		return dependentByItems;
-	}
-
-	public void setDependentByItems(List<Item> dependentByItems) {
-		this.dependentByItems = dependentByItems;
 	}
 
 	public DateAudit getDateAudit() {

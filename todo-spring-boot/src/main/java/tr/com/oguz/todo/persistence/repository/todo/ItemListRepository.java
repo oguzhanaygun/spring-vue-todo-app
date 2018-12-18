@@ -10,7 +10,10 @@ import tr.com.oguz.todo.persistence.entity.todo.ItemList;
 
 @Repository
 public interface ItemListRepository extends JpaRepository<ItemList, Long> {
-	@Query("SELECT list from ItemList list where list.createdBy.username = ?1")
+	@Query("select distinct list from ItemList list left join fetch list.items where list.createdBy.username = ?1 order by list.id")
 	public List<ItemList> findByUsername(String username);
+	
+	@Query("select distinct list from ItemList list left join fetch list.items where list.createdBy.username = ?1 order by list.id")
+	public List<ItemList> findById(String username);
 
 }

@@ -2,28 +2,42 @@
     <div class="hello">
         <h1>Welcome to regular users page</h1>
         <h2>{{msg}}</h2>
-        <h5>{{msg2}}</h5>
-        <ul id="example-1">
-            <li v-for="val in services">
-                {{val}}
-            </li>
-            </ul>
-
+        <div clsas="todo-container">
+            <div v-for="todos in todoLists">
+                 <List :todoList="todos"></List>
+            </div>
+            </div>
+            
     </div>
 </template>
 
 <script>
+    import List from '@/components/TodoList'
     export default {
         data () {
             return {
                 msg: 'This page must show the todo items of user',
-                msg2: 'I couldn\'t finish due to circumstances beyond my control.but backend services are ready',
-                services:{
-                    todoItem : 'http://localhost:5000/api/todo/item',
-                    todoList:'http://localhost:5000/api/todo/itemList',
-                    user:'http://localhost:5000/api/todo/user'
-                }
+                todoLists:[]
             }
+        },
+        components: {
+            List
+        },
+        computed: {
+            user(){
+                return localStorage.getItem(user);
+            }
+        },
+        beforeMount() {
+                let header = this.getAutHeader();
+                this.$http.get('http://localhost:5000/api/todo/itemList/', { 'headers': header})
+                     .then(response => {
+                       this.todoLists = response.data.data;
+                    })
+                    .catch(function (error) {
+                        alert("ups something went wrong look at the console");
+                        console.log(error);
+                    });  
         }
     }
 </script>
@@ -43,5 +57,9 @@
     }
     a {
         color: #42b983;
+    }
+    .todo-container{
+        height: 60%;
+        width: 100%;
     }
 </style>

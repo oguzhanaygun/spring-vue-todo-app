@@ -47,15 +47,16 @@
                             this.$emit('loggedIn')
                             if(this.$route.params.nextUrl != null){
                                 this.$router.push(this.$route.params.nextUrl)
-                                location.reload();
+                                this.$router.go();
                             } else {
                                 this.$router.push('dashboard')
-                                location.reload();
+                                this.$router.go();
                             }
                         }
                     })
                     .catch(function (error) {
-                        console.error(error.response);
+                        alert("ups something went wrong look at the console");
+                        console.log(error);
                     });
                 }
             }

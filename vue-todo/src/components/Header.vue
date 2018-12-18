@@ -10,7 +10,9 @@
 
         <div  class ="right" v-if="isLoggedIn">
            <h5 >{{username}}</h5>
-            <button v-on:click="logOut">Logout</button>
+            <b-btn v-on:click="logOut">Logout</b-btn>
+             <b-btn v-b-modal.item-list-create-modal>Create List</b-btn>
+
         </div>
         <div class ="right" v-else>
          <ul>
@@ -22,13 +24,19 @@
             </li>
         </ul>
         </div>
-        
+        <create-Item-Form></create-Item-Form>
+         <create-todo-form></create-todo-form>
     </div>
+
 </div>
+
 </template>
 
 <script>
-    import router from '../router'
+    import router from '../router';
+    import bButton from 'bootstrap-vue/es/components/button/button';
+    import createItemForm from '@/components/CreateListForm';
+    import createTodoForm from '@/components/CreateTodoForm';
     export default {
         data(){
             return {
@@ -38,21 +46,22 @@
         },
         computed:{
             user(){
-                return JSON.parse(localStorage.getItem("user")).username;
+                return JSON.parse(localStorage.getItem("user"));
             },
             username(){
-                return this.isLoggedIn ? this.user:"";
+                return this.isLoggedIn ? this.user.username : "";
             }
         },
-        mounted() {
+        beforeMount() {
               this.routes = router.options.routes;  
               this.isLoggedIn = this.isUserLoggedin();   
         },
+         components: {
+            'b-btn' : bButton,
+            'create-Item-Form' : createItemForm,
+            'create-todo-form':createTodoForm
+        },
         methods : {
-            isUserLoggedin(){
-                let jwt = localStorage.getItem('jwt');
-                return jwt != null && jwt != ""; 
-            },
             showLink(meta){
                 let isshow = false;
                 if(meta.show){
@@ -75,7 +84,7 @@
     }
 </script>
     <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style >
 .header{
     padding-right: 10px;
     padding-left: 10px;

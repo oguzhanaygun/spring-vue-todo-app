@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import tr.com.oguz.todo.exception.BadRequestException;
 import tr.com.oguz.todo.persistence.entity.todo.ItemList;
 import tr.com.oguz.todo.persistence.repository.todo.ItemListRepository;
+import tr.com.oguz.todo.security.UserPrincipal;
 import tr.com.oguz.todo.service.BaseService;
 
 @Service
@@ -15,7 +16,8 @@ public class ItemListService extends BaseService<ItemListRepository, ItemList> {
 
 	@PreAuthorize("#userName == principal.getUsername() or hasRole('ROLE_ADMIN')")
 	public List<ItemList> findByUsername(String username) {
-		return repository.findByUsername(username);
+		List<ItemList> list = repository.findByUsername(username);
+		return list;
 	}
 
 	@Override
@@ -26,5 +28,9 @@ public class ItemListService extends BaseService<ItemListRepository, ItemList> {
 		}
 
 		return repository.save(list);
+	}
+
+	public List<ItemList> getUsersList(UserPrincipal user) {
+		return repository.findByUsername(user.getUsername());
 	}
 }
