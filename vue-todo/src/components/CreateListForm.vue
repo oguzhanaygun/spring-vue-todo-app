@@ -32,8 +32,7 @@
             createNewList(e){
                 e.preventDefault();
                 let header = this.getAutHeader();
-                let user = JSON.parse(localStorage.getItem('user'));
-                let data = {'name':this.name,'createdBy':{'id':user.id}}; 
+                let data = {'name':this.name}; 
                 this.$http.post('http://localhost:5000/api/todo/itemList/',data ,{ 'headers':header, })
                 .then(response => {
                     this.$refs.modal.hide();

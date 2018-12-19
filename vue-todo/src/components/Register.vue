@@ -108,7 +108,7 @@
                         }
                     })
                     .catch(error => {
-                        for(let i in error.response.data){
+                        for(let i in error.response.data.data){
                             let fieldName = error.response.data.data[i].fieldName;
                             let message = error.response.data.data[i].message;
                             switch (fieldName){
